@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Game } from './Game'
+import styled from 'styled-components'
+import { use100vh } from 'react-div-100vh'
+
+const BACKGROUND_COLOR = "#000034"
+
+const Page = styled.div`
+  // display: flex;
+  // align-items: flex-end;
+  // width: 100%;
+  background-color: #000034;
+  // overflow-x: hidden;
+`
 
 function App() {
+  const pageHeight = use100vh() ?? 0
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Page style={{ minHeight: pageHeight }}>
+      <Game backgroundColor={BACKGROUND_COLOR}/>
+    </Page>
   );
 }
 
