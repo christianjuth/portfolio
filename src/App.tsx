@@ -1,15 +1,15 @@
-import './App.css';
 import { Game } from './Game'
 import styled from 'styled-components'
 import { use100vh } from 'react-div-100vh'
+import { useEffect, useState } from 'react';
 
-const BACKGROUND_COLOR = "#000034"
+const BACKGROUND_COLOR = "#1fa9e1"
 
 const Page = styled.div`
   // display: flex;
   // align-items: flex-end;
   // width: 100%;
-  background-color: #000034;
+  background-color: ${BACKGROUND_COLOR};
   // overflow-x: hidden;
 `
 

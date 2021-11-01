@@ -22,6 +22,7 @@ const Button = styled.button`
   font-weight: bold;
   border: 1px solid white;
   cursor: pointer;
+  margin: 1px;
 `
 
 export function GamePad({
