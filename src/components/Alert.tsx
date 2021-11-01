@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import Typist from 'react-typist';
+import { useEffect, useRef } from 'react';
+import { use100vh } from 'react-div-100vh'
 
 const Backdrop = styled.div`
   position: fixed;
@@ -12,9 +14,8 @@ const Backdrop = styled.div`
 
 const Container = styled.div`
   height: 400px;
-  width: 700px;
-  max-height: calc(100vh - 50px);
-  max-width: calc(100vw - 50px);
+  width: 750px;
+  max-width: calc(100vw - 75px);
   position: fixed;
   top: 50%;
   left: 50%;
@@ -64,18 +65,41 @@ const cursor = {
 export function Alert({
   title,
   msg,
-  learnMore,
-  onClose
+  links,
+  onClose,
+  onOpen
 }: {
   title: string
   msg: string,
-  learnMore?: string,
+  links: Record<string, string>,
   onClose: () => any
+  onOpen: () => any
 }) {
+  const closingRef = useRef(false)
+  const windowHeight = use100vh() ?? 0
+
+  useEffect(() => {
+    if (!closingRef.current) {
+      onOpen()
+    }
+
+    function handleKeyPress(e: KeyboardEvent) {
+      if (e.key === "Enter") {
+        closingRef.current = true
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress) 
+    }
+  }, [])
+
   return (
     <>
       <Backdrop/>
-      <Container>
+      <Container style={{maxHeight: windowHeight-75}}>
         <div style={{flex: 1}}>
           <Typist cursor={cursor} avgTypingDelay={50} stdTypingDelay={0}>
             <b>{title}</b>
@@ -87,8 +111,24 @@ export function Alert({
           </Typist>
         </div>
         <FlexRow>
-          {learnMore && <a href={learnMore}>Learn More</a>}
-          <button onClick={() => onClose()}>Close</button>
+          {Object.entries(links).map(([key,href]) => (
+            <a 
+              key={key}
+              target="_blank"
+              rel="noreferrer"
+              href={href}
+            >
+              {key}
+            </a>
+          ))}
+          <button 
+            onClick={() => {
+              closingRef.current = true
+              onClose()
+            }}
+          >
+            Close
+          </button>
         </FlexRow>
       </Container>
     </>

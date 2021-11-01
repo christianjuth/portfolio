@@ -15,21 +15,40 @@ import { Alert } from './components/Alert'
 
 const WELCOME_ALERT: AlertConfig = {
   title: 'Hi, my name is Christian',
-  msg: 'I am a frontend devloper mainly working with React. This game showcases all the projects I have worked on. You can naviage using the arrow keys. Hit a project to learn more.'
+  msg: 'I am a frontend devloper mainly working with React. This game showcases all the projects I have worked on. You can naviage using the arrow keys. Hit a project (by jumping) to learn more.'
 }
 
 const PROJECTS: AlertConfig[] = [
   {
-    title: 'A* graph search',
+    title: 'A* Search Visualizer',
     msg: 'This project is a React app that helps visualize forward, backward, and adaptive A* search on a variety of map types. You can run the search and watch how the algorithm explores the map.',
-    learnMore: 'https://a-star-search-visualizer-brown.vercel.app/'
+    links: {
+      'GitHub': 'https://github.com/christianjuth/a-star-search-visualizer',
+      'Demo': 'https://a-star-search-visualizer-brown.vercel.app/'
+    }
+  },
+  {
+    title: 'Spotify random playlist generator',
+    msg: 'This project is an Express.js app that uses the Spotify API to generate a random playlist as a method of discovering new music that is unrelated to your typical listening habits. This project was inspired by a TED talk given by Max Hawkins.',
+    links: {
+      'GitHub': 'https://github.com/christianjuth/spotify-random-playlist-generator',
+      'Demo': 'https://spotify-random-playlist-generator.vercel.app/'
+    }
+  },
+  {
+    title: 'React state machine library',
+    msg: 'This library generates finite state machines from JSON objects using TypeScript to infer event types. It also supports dispatching transition events to multiple machines similar to Redux combined reducers. The project is heavily inspired by XState.',
+    links: {
+      'GitHub': 'https://github.com/christianjuth/react-state-machines',
+      'Demo': 'https://react-state-machines.vercel.app/'
+    }
   }
 ]
 
 type AlertConfig = {
   title: string
   msg: string,
-  learnMore?: string
+  links?: Record<string, string>
 }
 
 const CHARACTER_RIGHT_IMAGES = [
@@ -52,7 +71,8 @@ const GAME_HEIGHT = 600
 const WALL_THICKNESS = 1
 const GROUND_HEIGHT = 153
 
-const BLOCK_HEIGHT = GAME_HEIGHT - 240
+const BLOCK_HEIGHT = GAME_HEIGHT - 230
+const LABEL_BLOCK_HEIGHT = BLOCK_HEIGHT - 65
 const BLOCK_SIZE = 50
 
 const BACKGROUND_IMAGE_HEIGHT = 81
@@ -61,7 +81,7 @@ const BACKGROUND_IMAGE_WIDTH = 411
 const CHARACTER_IMAGE_HEIGHT = 80
 const CHARACTER_IMAGE_WIDTH = 40
 
-function createImage(text: string, width: number) {
+function createImage(text: string, width: number, backgroundColor = 'black') {
 
   let drawing = document.createElement("canvas");
 
@@ -71,7 +91,7 @@ function createImage(text: string, width: number) {
   let ctx = drawing.getContext("2d");
 
   if (ctx) {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = backgroundColor;
     ctx.beginPath();
     ctx.rect(0,0,width,BLOCK_SIZE)
     ctx.closePath();
@@ -85,10 +105,10 @@ function createImage(text: string, width: number) {
   return drawing.toDataURL("image/png");
 }
 
-function createBox(text: string, createAlert: () => any) {
+function createBox(text: string, createAlert: () => any, x: number, y = BLOCK_HEIGHT) {
   const length = (text.length * 9) + 25
   return {
-    body: Bodies.rectangle(300, BLOCK_HEIGHT, length, BLOCK_SIZE, { 
+    body: Bodies.rectangle(x + length / 2, y, length, BLOCK_SIZE, { 
       isStatic: true,
       render: {
         sprite: {
@@ -98,7 +118,24 @@ function createBox(text: string, createAlert: () => any) {
         }
       }  
     }),
-    onCollision: createAlert
+    onCollision: createAlert,
+    length
+  }
+}
+
+function createLabel(text: string, x: number, y = LABEL_BLOCK_HEIGHT) {
+  const length = (text.length * 9) + 25
+  return {
+    body: Bodies.rectangle(x + length / 2, y, length, BLOCK_SIZE, { 
+      isStatic: true,
+      render: {
+        sprite: {
+          texture: createImage(text, length, '#4d4d4d'),
+          xScale: 1,
+          yScale: 1
+        }
+      }  
+    })
   }
 }
 
@@ -165,7 +202,7 @@ function game({
       sprite: {
         texture: characterRight1,
         xScale: 1,
-        yScale: 1
+        yScale: 1,
       }
     }
   })
@@ -177,13 +214,22 @@ function game({
     lineWidth: 0
   }
 
-  const projects = PROJECTS.map(({ title, msg, learnMore }) => createBox(title, () => createAlert({ title, msg, learnMore })))
+  const labels: ReturnType<typeof createLabel>[] = []
+
+  let projectX = 300
+  labels.push(createLabel('PROJECTS:', projectX))
+  const projects = PROJECTS.map(({ title, msg, links }) => {
+    const box = createBox(title, () => createAlert({ title, msg, links }), projectX)
+    projectX += box.length + 15
+    return box
+  })
 
   const ground = Bodies.rectangle(GAME_WIDTH/2, GAME_HEIGHT, GAME_WIDTH, GROUND_HEIGHT, { isStatic: true, render: renderWall })
   // add bodies
   Composite.add(world, [
     // falling blocks
     ...projects.map(p => p.body),
+    ...labels.map(p => p.body),
 
     // walls
     Bodies.rectangle(GAME_WIDTH/2, 0, GAME_WIDTH, WALL_THICKNESS, { isStatic: true, render: renderWall }),
@@ -204,7 +250,9 @@ function game({
   let consecutiveJumps = 0
   let moving = ''
   let jumping = false
+  let locked = true
   function moveCharacter(direction: 'e' | 'w' | 'n' | 's') {    
+    if (locked) return;
     switch (direction) {
       case 'e':
         moving = 'e'
@@ -233,6 +281,14 @@ function game({
 
   function stopCharacter() {
     moving = ''
+  }
+
+  function lockCharacter() {
+    stopCharacter()
+    locked = true
+  }
+  function unlockCharacter() {
+    locked = false
   }
 
   Events.on(engine, 'collisionStart', (event) => {
@@ -283,7 +339,7 @@ function game({
     if (moving) {
       Body.setVelocity(character, { 
         ...character.velocity,
-        x: (moving === 'e' ? -1 : 1) * 4,
+        x: (moving === 'e' ? -1 : 1) * 5,
       });
     }
   })
@@ -298,7 +354,9 @@ function game({
   return {
     moveCharacter,
     stopCharacter,
-    destroy
+    destroy,
+    lockCharacter,
+    unlockCharacter
   }
 }
 
@@ -321,7 +379,7 @@ export function Game({ backgroundColor }: { backgroundColor: string }) {
       })
       const { destroy, moveCharacter, stopCharacter } = gameRef.current
 
-      window.addEventListener("keydown", e => {
+      function handleKeyDown(e: KeyboardEvent) {
         if (e.key === 'ArrowLeft' || e.key === 'a') {
           moveCharacter('e');
         } else if (e.key === 'ArrowRight' || e.key === 'd') {
@@ -331,17 +389,27 @@ export function Game({ backgroundColor }: { backgroundColor: string }) {
         } else if (e.key === 'ArrowDown' || e.key === 's') {
           moveCharacter('s');
         }
-      });
+      }
+      window.addEventListener("keydown", handleKeyDown);
 
-      window.addEventListener("keyup", e => {
+      function handleKeyUp(e: KeyboardEvent) {
         if (e.key === 'ArrowLeft' || e.key === 'a') {
           stopCharacter();
         } else if (e.key === 'ArrowRight' || e.key === 'd') {
           stopCharacter();
         }
-      });
+      }
+      window.addEventListener("keyup", handleKeyUp);
+
+      function handleBlur() {
+        stopCharacter()
+      }
+      window.addEventListener('blur', handleBlur)
 
       return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp); 
+        window.removeEventListener('blur', handleBlur)
         destroy()
         gameRef.current = undefined
       }
@@ -369,8 +437,12 @@ export function Game({ backgroundColor }: { backgroundColor: string }) {
         <Alert 
           title={alertConfig.title}
           msg={alertConfig.msg} 
-          learnMore={alertConfig.learnMore}
-          onClose={() => setAlertConfig(null)} 
+          links={alertConfig.links ?? {}}
+          onOpen={() => gameRef.current?.lockCharacter()}
+          onClose={() => {
+            setAlertConfig(null)
+            gameRef.current?.unlockCharacter()
+          }} 
         />
       )}
     </>
