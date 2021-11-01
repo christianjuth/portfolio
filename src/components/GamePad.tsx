@@ -23,6 +23,7 @@ const Button = styled.button`
   border: 1px solid white;
   cursor: pointer;
   margin: 1px;
+  border-radius: 3px;
 `
 
 export function GamePad({
