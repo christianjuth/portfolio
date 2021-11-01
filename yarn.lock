@@ -1821,6 +1821,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/canvas-txt@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/canvas-txt/-/canvas-txt-3.0.0.tgz#5a6b5ad6413fb6940a4f5e98f0ccf395fbc40c11"
+  integrity sha512-KfJk5YWbujYQqKzHBzHOsq68dnqg7MwMxPlwwnvgjXG0ViwafIqYveEPpUZK5G7TrlwEEHqEvgE6LAJig+valw==
+
 "@types/eslint@^7.2.6":
   version "7.2.6"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.2.6.tgz#5e9aff555a975596c03a98b59ecd103decc70c3c"
@@ -3324,6 +3329,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001109, can
   version "1.0.30001191"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001191.tgz#bacb432b6701f690c8c5f7c680166b9a9f0843d9"
   integrity sha512-xJJqzyd+7GCJXkcoBiQ1GuxEiOBCLQ0aVW9HMekifZsAVGdj5eJ4mFB9fEhSHipq9IOk/QXFJUiIr9lZT+EsGw==
+
+canvas-txt@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/canvas-txt/-/canvas-txt-3.0.0.tgz#47d84e8870201d21604cc2d2964be22c46360ec4"
+  integrity sha512-SrNIp4aaGsgddjQX7S0D8jDaYNaOkPjC/k6VjaaT3h1GZ5RonSvmoCv2FyQfNk9mPZto84C8sNURgEC8dsC/vA==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -9274,6 +9284,11 @@ react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
+
+react-icons@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
+  integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
 
 react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"

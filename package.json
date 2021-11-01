@@ -10,10 +10,12 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "canvas-txt": "^3.0.0",
     "matter-js": "^0.17.1",
     "react": "^17.0.2",
     "react-div-100vh": "^0.6.0",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
     "react-scripts": "4.0.3",
     "react-typist": "^2.0.5",
     "styled-components": "^5.3.3",
@@ -45,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@types/canvas-txt": "^3.0.0",
     "@types/matter-js": "^0.17.6",
     "@types/react-typist": "^2.0.3",
     "@types/styled-components": "^5.1.15"

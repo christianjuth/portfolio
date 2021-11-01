@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Typist from 'react-typist';
 import { useEffect, useRef } from 'react';
 import { use100vh } from 'react-div-100vh'
+import { clipCorners } from './ClipCorners'
 
 const Backdrop = styled.div`
   position: fixed;
@@ -13,6 +14,7 @@ const Backdrop = styled.div`
 `
 
 const Container = styled.div`
+  ${clipCorners}
   height: 400px;
   width: 750px;
   max-width: calc(100vw - 75px);
@@ -23,11 +25,9 @@ const Container = styled.div`
   background-color: black;
   color: white;
   padding: 25px;
-  border: 1px solid white;
   font-size: calc(0.8rem + 0.5vw);
   display: flex;
   flex-direction: column;
-  border-radius: 3px;
 
   button,
   a,
