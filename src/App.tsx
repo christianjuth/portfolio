@@ -1,7 +1,6 @@
 import { Game } from './Game'
 import styled from 'styled-components'
 import { use100vh } from 'react-div-100vh'
-import { useEffect, useState } from 'react';
 
 const BACKGROUND_COLOR = "#1fa9e1"
 

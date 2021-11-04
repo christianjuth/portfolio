@@ -1,17 +1,22 @@
-import { Engine, Render, Composite, Bodies, Runner, Body, Events, Bounds } from 'matter-js'
+import { Bodies, Body, Bounds, Composite, Engine, Events, Render } from 'matter-js'
 import { useEffect, useRef, useState } from 'react'
 import backgroundImage from './assets/backgroundImage.png'
-
-import characterRight1 from './assets/character-right-1.png'
-import characterRight2 from './assets/character-right-2.png'
-import characterRight3 from './assets/character-right-3.png'
-
 import characterLeft1 from './assets/character-left-1.png'
 import characterLeft2 from './assets/character-left-2.png'
 import characterLeft3 from './assets/character-left-3.png'
-
-import { GamePad } from './components/GamePad'
+import characterRight1 from './assets/character-right-1.png'
+import characterRight2 from './assets/character-right-2.png'
+import characterRight3 from './assets/character-right-3.png'
+import clouds from './assets/clouds.png'
 import { Alert } from './components/Alert'
+import { GamePad } from './components/GamePad'
+import { ThemeMusic } from './components/ThemeMusic'
+import { Credits } from './components/Credits'
+import rutgers from './assets/rutgers.png'
+
+
+
+
 
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
@@ -23,6 +28,26 @@ type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 //     img.src = src
 //   })
 // }
+
+function calculateFps(itterations = 10) {
+  return new Promise<number>((resolve, reject) => {
+    let now: number
+    let before = Date.now();
+    const fps: number[] = []
+    requestAnimationFrame(
+      function loop(){
+        now=Date.now();
+        fps.push(Math.round(1000/(now-before)));
+        before=now;
+        if (fps.length < itterations) {
+          requestAnimationFrame(loop);
+        } else {
+          resolve(fps.reduce((a, b) => a + b) / fps.length)
+        }
+      }
+    );
+  });  
+}
 
 const WELCOME_ALERT: AlertConfig = {
   title: 'Hi, my name is Christian',
@@ -82,9 +107,10 @@ const GAME_HEIGHT = 600
 const WALL_THICKNESS = 1
 const GROUND_HEIGHT = 153
 
-const BLOCK_HEIGHT = GAME_HEIGHT - 230
-const LABEL_BLOCK_HEIGHT = BLOCK_HEIGHT - 65
-const BLOCK_SIZE = 50
+const BLOCK_SIZE = 40
+const BLOCK_HEIGHT = GAME_HEIGHT - 215
+const LABEL_BLOCK_HEIGHT = BLOCK_HEIGHT - (BLOCK_SIZE + 10)
+
 
 const BACKGROUND_IMAGE_HEIGHT = 81
 const BACKGROUND_IMAGE_WIDTH = 411
@@ -151,7 +177,7 @@ async function createLabel(text: string, x: number, y = LABEL_BLOCK_HEIGHT): Pro
       isStatic: true,
       render: {
         sprite: {
-          texture: await createImage(text, length, 'rgba(0,0,0,0.35)'),
+          texture: await createImage(text, length, '#008dc3'),
           xScale: 1,
           yScale: 1
         }
@@ -206,14 +232,28 @@ async function game({
       height: GAME_HEIGHT,
       background: 'transparent',
       wireframes: false,
+      // showPerformance: true
     }
   });
 
   Render.run(render);
 
-  // create runner
-  var runner = Runner.create();
-  Runner.run(runner, engine);
+  let stopRuner = false
+  // THIS IS A HACK
+  // This keeps the game physics running consistently 
+  // when low power mode is turned on on ios
+  let prev = Date.now()
+  function frame() {
+    if (stopRuner) return;
+    let diff = Date.now() - prev
+    prev = Date.now()
+    for (let i = 0; i < diff/(1000/60); i++) {
+      Engine.update(engine, 1000 / 60); 
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame)
+
 
   const character = Bodies.rectangle(100, GAME_HEIGHT - GROUND_HEIGHT, CHARACTER_IMAGE_WIDTH, CHARACTER_IMAGE_HEIGHT, { 
     frictionAir: 0.005, 
@@ -246,7 +286,7 @@ async function game({
   for (const project of PROJECTS) {
     const { title, msg, links } = project
     const box = await createBox(title, () => createAlert({ title, msg, links }), projectX)    
-    projectX += box.length + 15
+    projectX += box.length + 10
     projects.push(box)
   }
 
@@ -299,7 +339,7 @@ async function game({
       case 's':
         Body.setVelocity(character, { 
           ...character.velocity,
-          y: 50 
+          y: consecutiveJumps === 0 ? 0 : 20
         });
         break; 
     }
@@ -366,14 +406,14 @@ async function game({
     if (moving) {
       Body.setVelocity(character, { 
         ...character.velocity,
-        x: (moving === 'e' ? -1 : 1) * 5,
+        x: (moving === 'e' ? -1 : 1) * 3.1,
       });
     }
   })
 
   function destroy() {
     Render.stop(render);
-    Runner.stop(runner);
+    stopRuner = true;
     render.canvas.remove();
     window.removeEventListener('resize', handleWindowResize)
   }
@@ -412,12 +452,16 @@ export function Game({ backgroundColor }: { backgroundColor: string }) {
 
       function handleKeyDown(e: KeyboardEvent) {
         if (e.key === 'ArrowLeft' || e.key === 'a') {
+          e.preventDefault()
           moveCharacter('e');
         } else if (e.key === 'ArrowRight' || e.key === 'd') {
+          e.preventDefault()
           moveCharacter('w');
         } else if (e.key === 'ArrowUp' || e.key === 'w' || e.code === 'Space') {
+          e.preventDefault()
           moveCharacter('n');
         } else if (e.key === 'ArrowDown' || e.key === 's') {
+          e.preventDefault()
           moveCharacter('s');
         }
       }
@@ -455,6 +499,19 @@ export function Game({ backgroundColor }: { backgroundColor: string }) {
 
   return (
     <>
+      <div
+        style={{
+          backgroundImage: `url(${clouds})`,
+          backgroundPosition: `${-backgroundPos.x}px bottom`,
+          backgroundRepeat: 'repeat-x',
+          backgroundSize: `${1145}px, ${99}px`,
+          position: 'fixed',
+          top: "calc(8vh - 32px)",
+          height: 100,
+          left: 0,
+          right: 0
+        }}
+      />
       <div 
         ref={ref} 
         style={{
@@ -463,9 +520,11 @@ export function Game({ backgroundColor }: { backgroundColor: string }) {
           backgroundRepeat: 'repeat-x',
           backgroundSize: `${BACKGROUND_IMAGE_WIDTH}px, ${BACKGROUND_IMAGE_HEIGHT}px`,
           position: 'fixed',
-          bottom: 0,
+          bottom: -10,
         }} 
       />
+      <Credits/>
+      <ThemeMusic/>
       <GamePad
         onArrowPress={direction => gameRef.current?.moveCharacter(direction)}
         onArrowRelease={() => gameRef.current?.stopCharacter()}

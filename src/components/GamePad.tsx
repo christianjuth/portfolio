@@ -9,8 +9,8 @@ const Controls = styled.div`
   flex-direction: column;
   align-items: center;
   position: fixed;
-  bottom: 10px;
-  right: 10px;
+  bottom: 5px;
+  right: 5px;
 `
 
 const FlexRow = styled.div`
