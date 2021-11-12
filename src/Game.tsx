@@ -57,7 +57,7 @@ const WELCOME_ALERT: AlertConfig = {
 const PROJECTS: AlertConfig[] = [
   {
     title: 'A* Search Visualizer',
-    msg: 'This project is a React app that helps visualize forward, backward, and adaptive A* search on a variety of map types. You can run the search and watch how the algorithm explores the map.',
+    msg: 'This project is a React app that helps visualize A* search on a variety of map types. You can run the search and watch how the algorithm explores the map.',
     links: {
       'GitHub': 'https://github.com/christianjuth/a-star-search-visualizer',
       'Demo': 'https://a-star-search-visualizer-brown.vercel.app/'
