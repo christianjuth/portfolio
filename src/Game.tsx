@@ -51,7 +51,7 @@ function calculateFps(itterations = 10) {
 
 const WELCOME_ALERT: AlertConfig = {
   title: 'Hi, my name is Christian',
-  msg: 'I am a frontend devloper mainly working with React. This game showcases all the projects I have worked on. You can naviage using the arrow keys. Hit a project (by jumping) to learn more.'
+  msg: 'I am a frontend devloper mainly working with React. This game showcases all the projects I have worked on. You can navigate using the arrow keys. Hit a project (by jumping) to learn more.'
 }
 
 const PROJECTS: AlertConfig[] = [
