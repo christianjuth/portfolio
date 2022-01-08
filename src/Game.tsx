@@ -55,7 +55,8 @@ const PROJECTS: AlertConfig[] = [
     title: 'Tic-Tac-Toe AI in Rust',
     msg: "This unbeatable Tic-Tac-Toe AI uses the Minimax algorithm with fail-soft alpha-beta pruning to find the best possible move. Written in Rust, it finds each move almost instantaneously. The AI is also smart enough to know when a game is unwinnable by either side, leading to an automatic draw.",
     links: {
-      'GitHub': 'https://github.com/christianjuth/monorepo/blob/main/rust/tic_tac_toe/src/main.rs'
+      'GitHub': 'https://github.com/christianjuth/monorepo/blob/main/rust/tic_tac_toe/src/main.rs',
+      'Demo': "https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=2331928209d05d2bf9d03457cfb8b0c9"
     }
   },
   {
