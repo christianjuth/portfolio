@@ -94,7 +94,7 @@ export function Alert({
     }
 
     function handleKeyPress(e: KeyboardEvent) {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" || e.key === "Escape") {
         closingRef.current = true
         onClose()
       }

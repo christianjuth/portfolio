@@ -12,11 +12,7 @@ import { Alert } from './components/Alert'
 import { GamePad } from './components/GamePad'
 import { ThemeMusic } from './components/ThemeMusic'
 import { Credits } from './components/Credits'
-import rutgers from './assets/rutgers.png'
-
-
-
-
+// import rutgers from './assets/rutgers.png'
 
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T
 
@@ -56,11 +52,42 @@ const WELCOME_ALERT: AlertConfig = {
 
 const PROJECTS: AlertConfig[] = [
   {
-    title: 'A* Search Visualizer',
-    msg: 'This project is a React app that helps visualize A* search on a variety of map types. You can run the search and watch how the algorithm explores the map.',
+    title: 'Tic-Tac-Toe AI in Rust',
+    msg: "This unbeatable Tic-Tac-Toe AI uses the Minimax algorithm with fail-soft alpha-beta pruning to find the best possible move. Written in Rust, it finds each move almost instantaneously. The AI is also smart enough to know when a game is unwinnable by either side, leading to an automatic draw.",
     links: {
-      'GitHub': 'https://github.com/christianjuth/a-star-search-visualizer',
-      'Demo': 'https://a-star-search-visualizer-brown.vercel.app/'
+      'GitHub': 'https://github.com/christianjuth/monorepo/blob/main/rust/tic_tac_toe/src/main.rs'
+    }
+  },
+  {
+    title: 'DFS Sudoku Solver',
+    msg: 'This is an NPM package I wrote that takes a one-dimensional array representing a Sudoku puzzle and spits out one possible solution (if one exists). It solves the puzzle using Depth First Search, randomizing the order that it pushes next moves onto the stack. The solve function is fast enough to run in real-time, allowing it to generate a solution to a puzzle as you change the constraints.',
+    links: {
+      'GitHub': 'https://github.com/christianjuth/monorepo/tree/main/packages/sudoku-solver',
+      'Demo': 'https://npm.christianjuth.com/sudoku-solver'
+    }
+  },
+  {
+    title: 'React Photo Editor',
+    msg: 'This is a proof of concept React app that allows you to edit photos in the browser. It leverages hardware acceleration using GPU.js to manipulate the image data.',
+    links: {
+      'GitHub': 'https://github.com/christianjuth/react-photo-editor',
+      'Demo': 'https://laughing-pare-d218eb.netlify.app/'
+    }
+  },
+  {
+    title: 'Graph Search Visualizer',
+    msg: 'This project is a React app that helps visualize multiple search algorithms, including BFS, DFS, bidirectional BFS, Best First Search, and A* Search. You can run the search and watch how the algorithm explores the map.',
+    links: {
+      'GitHub': 'https://github.com/christianjuth/graph-search-visualizer',
+      'Demo': 'https://graph-search-visualizer.vercel.app/'
+    }
+  },
+  {
+    title: 'Minimax Pruning Solver',
+    msg: 'This project helps visualize Minimax fail-soft alpha-beta pruning in the browser. The app allows you to switch between left-to-right, right-to-left, and no pruning.',
+    links: {
+      'GitHub': 'https://github.com/christianjuth/minimax-tree-pruning',
+      'Demo': 'https://minimax-tree-pruning.vercel.app/'
     }
   },
   {
